@@ -7,6 +7,9 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+- Corrected repository name references in Deploy to Azure button and GitHub Actions workflows
+
 ## [0.1.0] - 2026-02-17
 
 ### Added

@@ -2,7 +2,7 @@
 
 Open-source monitoring solution for Microsoft Fabric capacities. Built for consulting companies, Microsoft partners, and IT teams who need to monitor Fabric capacity metrics across multiple customer tenants from a single centralized platform.
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fyaribouwman%2FFabric-Capacity-Monitor%2Fmain%2Finfra%2Fmain.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fyaribouwman%2Ffabriccapacitymonitor%2Fmain%2Finfra%2Fmain.json)
 
 ## What It Does
 

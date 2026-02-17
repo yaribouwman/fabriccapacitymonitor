@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: fabric-capacity-monitor
+  IMAGE_NAME: fabriccapacitymonitor
 
 jobs:
   build:

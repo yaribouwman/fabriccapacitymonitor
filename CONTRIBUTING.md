@@ -77,7 +77,7 @@ pytest tests/
 
 ```bash
 cd backend
-docker build -t fabric-monitor:local .
+docker build -t fabriccapacitymonitor:local .
 ```
 
 ## Areas for Contribution
