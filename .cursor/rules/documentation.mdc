@@ -1,0 +1,71 @@
+# Documentation Standards
+
+All documentation in this project should read like internal engineering documentation, not a blog post or tutorial.
+
+## Style Guide
+
+### Tone
+- Direct and concise
+- Assume the reader is a competent engineer
+- No filler sentences or restating the obvious
+- No phrases like "In this section we will discuss" or "Let's take a look at"
+
+### Formatting
+- Use mermaid for diagrams (architecture, flows, sequences)
+- Use tables for structured comparisons
+- Use code blocks with appropriate language tags
+- Use markdown headings correctly (H1 for title, H2 for sections, H3 for subsections)
+
+### Prohibited
+- No emoji anywhere in documentation
+- No ASCII art banners or decorative borders
+- No excessive markdown formatting (bold/italic for emphasis only)
+- No "AI slop" patterns: corporate buzzwords, verbose explanations, tutorial-style prose
+
+## Documentation Types
+
+### README.md
+- Under 100 lines total
+- Three sections: What, How, Security
+- Link to `docs/` for anything longer than a paragraph
+- Include Deploy to Azure button
+- Include basic setup instructions
+
+### Architecture Docs (docs/architecture.md)
+- High-level component diagram
+- Network topology with CIDR ranges
+- Data flow diagram
+- Trust boundaries and security zones
+- One page a new engineer reads on day one
+
+### Decision Records (docs/decisions.md)
+- ADR-style format
+- One entry per major decision
+- Include: context, decision, rationale, tradeoffs, status
+- Short (2-3 paragraphs per decision)
+- Focus on "why" over "what"
+
+### How-To Guides (docs/howto.md)
+- Step-by-step operational procedures
+- Assumes reader has basic Azure knowledge
+- Include copy-paste commands where appropriate
+- No hand-holding or excessive explanation
+
+## Code Comments
+
+Apply the same standards to inline code comments:
+- Only comment the "why", never the "what"
+- Well-named variables and functions should be self-documenting
+- Comment non-obvious choices, workarounds, or performance considerations
+- One-line comments preferred, multi-line only when necessary
+
+## Commit Messages
+
+Follow conventional commits format:
+- `feat:` for new features
+- `fix:` for bug fixes
+- `docs:` for documentation changes
+- `refactor:` for code refactoring
+- `chore:` for maintenance tasks
+
+Keep first line under 72 characters. Add body if context is needed.

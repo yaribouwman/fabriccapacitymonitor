@@ -1,0 +1,15 @@
+{
+  "Name": "Fabric Capacity Reader",
+  "Description": "Read-only access to Microsoft Fabric capacities and their metrics for monitoring purposes",
+  "Actions": [
+    "Microsoft.Fabric/capacities/read",
+    "Microsoft.Insights/metricDefinitions/read",
+    "Microsoft.Insights/metrics/read"
+  ],
+  "NotActions": [],
+  "DataActions": [],
+  "NotDataActions": [],
+  "AssignableScopes": [
+    "/subscriptions/SUBSCRIPTION_ID_PLACEHOLDER"
+  ]
+}

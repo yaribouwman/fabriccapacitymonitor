@@ -1,0 +1,79 @@
+# Backend Rules
+
+This project will use Python with FastAPI and SQLAlchemy for the backend API.
+
+## Stack (Anticipated)
+
+- **Runtime**: Python 3.12+
+- **Framework**: FastAPI
+- **ORM**: SQLAlchemy 2.0+
+- **Database**: PostgreSQL via asyncpg
+- **Validation**: Pydantic v2
+- **Migrations**: Alembic
+
+## Code Standards
+
+### Project Structure
+```
+backend/
+  app/
+    api/
+      routes/
+      dependencies.py
+    core/
+      config.py
+      security.py
+    db/
+      base.py
+      session.py
+    models/
+    schemas/
+    services/
+  alembic/
+  tests/
+  main.py
+  requirements.txt
+  Dockerfile
+```
+
+### Configuration
+- Use environment variables via pydantic BaseSettings
+- Database connection string from env var `DATABASE_URL`
+- Never commit secrets or .env files
+- Provide `.env.example` with placeholder values
+
+### Database
+- No ORM queries in route handlers
+- Database logic lives in `services/` layer
+- Use async session management
+- Connection pooling for production workloads
+
+### Logging
+- Use structured logging (structlog or Python logging with JSON formatter)
+- Log at appropriate levels: DEBUG, INFO, WARNING, ERROR
+- Include trace IDs for request tracking
+- Never log secrets or PII
+
+### Error Handling
+- Return proper HTTP status codes
+- Use FastAPI exception handlers
+- Return consistent error response shape
+- Log errors with context
+
+### Testing
+- Unit tests for business logic
+- Integration tests against real PostgreSQL (testcontainers)
+- pytest with async support
+- Aim for >80% coverage on services layer
+
+## Docker
+
+Containerize the app:
+- Multi-stage build (builder + runtime)
+- Non-root user
+- Health check endpoint at `/health`
+- Minimal image size (use python:3.12-slim)
+
+## Comments
+
+Same philosophy as Bicep: minimal comments, clear variable names, only explain non-obvious decisions.

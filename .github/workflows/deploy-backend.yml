@@ -1,0 +1,65 @@
+name: Deploy Backend to Azure
+
+on:
+  workflow_run:
+    workflows: ["Build and Push Docker Image"]
+    types:
+      - completed
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: fabric-capacity-monitor
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Update Container App
+        run: |
+          echo "Updating Container App with latest image..."
+          
+          az containerapp update \
+            --name ${{ vars.CONTAINER_APP_NAME }} \
+            --resource-group ${{ vars.RESOURCE_GROUP }} \
+            --image ${{ vars.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:latest \
+            --set-env-vars \
+              "COLLECTOR_INTERVAL_MINUTES=15" \
+              "LOG_LEVEL=INFO"
+          
+          echo "Deployment completed successfully!"
+
+      - name: Verify Deployment
+        run: |
+          echo "Waiting for new revision to be ready..."
+          sleep 30
+          
+          FQDN=$(az containerapp show \
+            --name ${{ vars.CONTAINER_APP_NAME }} \
+            --resource-group ${{ vars.RESOURCE_GROUP }} \
+            --query properties.configuration.ingress.fqdn \
+            -o tsv)
+          
+          echo "Testing health endpoint..."
+          curl -f https://$FQDN/health || exit 1
+          
+          echo "Container App is healthy and responding!"
+          echo "URL: https://$FQDN"
+
+      - name: Get Container Logs
+        if: failure()
+        run: |
+          echo "Deployment failed. Fetching recent logs..."
+          az containerapp logs show \
+            --name ${{ vars.CONTAINER_APP_NAME }} \
+            --resource-group ${{ vars.RESOURCE_GROUP }} \
+            --tail 50

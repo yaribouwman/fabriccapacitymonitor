@@ -1,0 +1,90 @@
+# Bicep Infrastructure Rules
+
+## Naming Convention
+
+All Azure resources follow: `{type}-{app}-{env}`
+
+Examples:
+- `vnet-fabricmon-prod`
+- `kv-fabricmon-dev`
+- `id-fabricmon-prod`
+
+Use abbreviated type prefixes per Azure CAF:
+- `vnet`: Virtual Network
+- `snet`: Subnet
+- `nsg`: Network Security Group
+- `id`: User Assigned Identity
+- `kv`: Key Vault
+- `acr`: Container Registry
+- `cae`: Container App Environment
+- `ca`: Container App
+- `psql`: PostgreSQL Server
+
+## Code Standards
+
+### Parameters and Outputs
+- Use `@description()` on all parameters and outputs
+- Use `@allowed()` for enums
+- Use `@secure()` for passwords and secrets
+- Use `@minLength()` and `@maxLength()` where appropriate
+
+### Comments
+- Only comment the "why", never the "what"
+- Well-named variables and resources should be self-documenting
+- Comment non-obvious choices: specific CIDR ranges, SKU mappings, timing decisions
+
+### Variables
+- Prefer clear names over comments: `var appSubnetCidr = '10.0.0.0/23'`
+- Group related variables together
+- Compute derived values in variables, not inline
+
+## Security Standards
+
+### Identity
+- Always use User Assigned Managed Identity
+- Never use System Assigned Identity (harder to audit, pre-assign roles)
+- Create identity first, assign RBAC roles explicitly
+
+### Secrets
+- Never return secrets in outputs
+- Store all secrets in Key Vault
+- Use Key Vault references in Container Apps, not inline secrets
+- Use `@secure()` parameter decorator for password inputs
+
+### Network
+- Always deploy database in private VNET
+- Use subnet delegation where required
+- Apply NSGs to subnets with deny-all-inbound default
+- Use Private DNS zones for private endpoints
+
+### RBAC
+- Grant minimum required roles
+- Key Vault: Use "Key Vault Secrets User" (read-only), not "Key Vault Administrator"
+- ACR: Use "AcrPull", not "Contributor"
+- Assign roles to User Assigned Identities, not to apps directly
+
+## Tagging
+
+All resources must have tags:
+- `Owner`: Name of project owner
+- `Environment`: Deployment tier (Starter, Enterprise)
+- `CostCenter`: For chargeback
+- `Project`: Project name
+
+Define tags once in main.bicep and propagate to modules.
+
+## API Versions
+
+Use stable API versions unless a feature requires preview:
+- Container Apps: `2024-03-01` or later
+- PostgreSQL Flexible: `2023-03-01-preview` or later
+- Key Vault: `2023-07-01`
+- Managed Identity: `2023-01-31`
+
+## Module Structure
+
+Each module should:
+- Accept location, tags, and naming prefix as parameters
+- Return resource IDs and names as outputs
+- Be independently testable
+- Handle its own RBAC role assignments where possible

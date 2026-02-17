@@ -1,0 +1,29 @@
+# Frontend Rules
+
+Placeholder for future frontend development.
+
+## Current State
+
+The initial product is a backend API that ingests Microsoft Fabric capacity metrics and stores them in PostgreSQL. The frontend will evolve in two phases:
+
+### Phase 1: Power BI Report (Public)
+- Embedded Power BI report consuming data from the backend API
+- Read-only view of capacity metrics
+- No authentication required for self-hosted deployments
+
+### Phase 2: SaaS Frontend (Private, Upsell)
+- Web application for organizations that don't want to self-host
+- Additional premium features (alerting, custom dashboards, historical trends)
+- Subscription-based pricing
+- Multi-tenant architecture
+
+## Future Conventions
+
+Once frontend development begins:
+- Framework TBD (likely React or Vue)
+- TypeScript for type safety
+- Minimal UI framework (TailwindCSS or similar)
+- Component-driven architecture
+- Same code quality bar: no over-commenting, no emoji, human-written code
+
+This file will be updated when frontend development starts.

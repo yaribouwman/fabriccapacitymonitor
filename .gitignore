@@ -1,0 +1,27 @@
+# Bicep
+*.bicepparam
+
+# Azure
+*.parameters.json
+.azure/
+
+# Secrets
+*.env
+.env.*
+secrets/
+*.key
+*.pem
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
