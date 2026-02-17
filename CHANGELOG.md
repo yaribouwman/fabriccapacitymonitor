@@ -7,6 +7,13 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+- Rewrote documentation to remove AI-generated content and improve technical writing quality
+- Updated security.md with specific remediation commands and detailed security enhancement guidance
+- Revised CONTRIBUTING.md with project-specific requirements and concrete contribution priorities
+- Enhanced README.md roadmap with current status indicators
+- Improved error messages in collector service for clarity
+
 ### Fixed
 - Corrected repository name references in Deploy to Azure button and GitHub Actions workflows
 

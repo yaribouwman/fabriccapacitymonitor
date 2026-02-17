@@ -1,26 +1,30 @@
 # Contributing to Fabric Capacity Monitor
 
-Thank you for your interest in contributing to this project. We welcome contributions from consulting companies, Fabric administrators, and the broader community.
+This project accepts contributions from consulting companies, Microsoft partners, Fabric administrators, and individual developers.
 
-## How to Contribute
+## Reporting Issues
 
-### Reporting Issues
+Bug reports and feature requests:
 
-If you encounter a bug or have a feature request:
+1. Search existing issues to avoid duplicates
+2. Open a new issue with a descriptive title
+3. For bugs, include:
+   - Azure region and Container App environment
+   - Fabric API version (if relevant)
+   - Error messages from Container App logs
+   - Reproduction steps
+4. For feature requests, describe the use case and expected behavior
 
-1. Check the existing issues to avoid duplicates
-2. Open a new issue with a clear title and description
-3. Include reproduction steps for bugs
-4. For feature requests, explain the use case and expected behavior
-
-### Submitting Pull Requests
+## Pull Requests
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/your-feature-name`)
-3. Make your changes following the code style guidelines below
-4. Test your changes thoroughly
-5. Commit with clear, descriptive messages
-6. Push to your fork and open a pull request
+3. Follow the code style guidelines below
+4. Test changes against a real Azure deployment
+5. Validate Bicep templates with `az bicep build`
+6. Run Python tests with `pytest` before committing
+7. Commit with descriptive messages
+8. Push to your fork and open a pull request
 
 ### Code Style Guidelines
 
@@ -80,25 +84,40 @@ cd backend
 docker build -t fabriccapacitymonitor:local .
 ```
 
-## Areas for Contribution
+## Contribution Areas
 
-We welcome contributions in these areas:
+Current priorities:
 
-- **Fabric API Integration**: Improvements to data collection from Fabric APIs
-- **Frontend Development**: Building a web UI for the monitoring dashboard
-- **Alerting**: Adding email/Teams/Slack notifications for capacity issues
-- **Documentation**: Improving guides, adding examples, fixing typos
-- **Testing**: Adding unit tests, integration tests, end-to-end tests
-- **Performance**: Optimizing database queries, API calls, background jobs
-- **Security**: Identifying and fixing vulnerabilities
+**Fabric API Integration**:
+- Support for additional metrics beyond capacity state and SKU
+- Handle throttling and retry logic for Azure Resource Manager APIs
+- Multi-region capacity discovery
 
-## Community Guidelines
+**Frontend**:
+- Web UI for customer management (currently CLI-only)
+- Real-time capacity status dashboard
+- Historical metric visualization
 
-- Be respectful and inclusive
-- Provide constructive feedback
-- Help others learn and grow
-- Follow the MIT license terms
+**Alerting**:
+- Webhook notifications for capacity state changes
+- Integration with Teams, Slack, or email
+- Configurable threshold-based alerts
 
-## Questions?
+**Security**:
+- Authentication for customer data endpoints
+- PostgreSQL Row-Level Security policies
+- Secret rotation automation
 
-Open a discussion in the GitHub Discussions tab or contact the maintainers via email.
+**Testing**:
+- Integration tests for Azure API interactions
+- Load testing for multi-customer scenarios
+- Bicep validation in CI/CD pipeline
+
+**Performance**:
+- Database query optimization for large metric datasets
+- Concurrent collection performance tuning
+- Background job scheduling improvements
+
+## Questions
+
+Open an issue for questions about the codebase, architecture, or Azure deployment. For security issues, see `docs/security.md`.

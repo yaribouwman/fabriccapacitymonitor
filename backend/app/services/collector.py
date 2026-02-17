@@ -175,7 +175,7 @@ class CapacityCollector:
 
         except ClientAuthenticationError as e:
             error_type = "authentication_failed"
-            error_message = f"Service Principal authentication failed. Secret may be expired or invalid: {str(e)}"
+            error_message = f"Service Principal authentication failed (secret expired or invalid): {str(e)}"
             logger.error(
                 error_type,
                 customer_id=str(customer.id),
@@ -189,7 +189,7 @@ class CapacityCollector:
         except httpx.HTTPStatusError as e:
             if e.response.status_code in (401, 403):
                 error_type = "authorization_failed"
-                error_message = f"Azure API authorization failed (HTTP {e.response.status_code}). Check Service Principal permissions."
+                error_message = f"Azure API authorization failed (HTTP {e.response.status_code}): insufficient Service Principal permissions"
             else:
                 error_type = "api_error"
                 error_message = f"Azure API error (HTTP {e.response.status_code}): {e.response.text[:500]}"

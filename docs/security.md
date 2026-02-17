@@ -102,13 +102,13 @@ Protected by **X-Ingest-Key** header authentication:
 
 #### Customer Data Endpoints
 
-No authentication required (public API), but **customer_id** scoped:
+No authentication required (public API), scoped by **customer_id**:
 
 - `GET /api/customers/{customer_id}/capacities`
 - `GET /api/customers/{customer_id}/capacities/{capacity_id}/metrics`
 - `GET /api/customers/{customer_id}/capacities/{capacity_id}/snapshots`
 
-**Note**: These endpoints should be protected in production. Consider adding authentication or making them admin-only.
+These endpoints are unauthenticated to support Power BI Dataflows and notebook ingestion without credential management. Authentication can be added if required by your security policy.
 
 ## Data Isolation
 
@@ -201,10 +201,10 @@ DEPLOYMENT_OUTPUT=$(az deployment group create \
 
 **Customer Onboarding** (`setup-customer.sh`):
 ```bash
-echo "Client Secret:   $SECRET"  # Intentional - for secure transmission
+echo "Client Secret:   $SECRET"  # Printed once during onboarding for secure transmission
 ```
 
-This is the only place a secret is printed, and it's by design for customer onboarding.
+The setup script outputs the client secret to enable secure transmission to customers. This is the only location where a secret is printed.
 
 ## Access Revocation
 
@@ -267,7 +267,11 @@ GET /api/customers/{customer-a-id}/capacities/{customer-b-capacity-id}/snapshots
 - Cannot read other customers' data
 - Cannot access admin endpoints
 
-**Remediation**: Admin rotates ingest key via database update
+**Remediation**:
+```sql
+UPDATE customers SET ingest_key = gen_random_uuid() WHERE id = '{customer_id}';
+```
+Rotate the ingest key directly in the database, then notify the customer.
 
 ### Database Compromise
 
@@ -279,7 +283,7 @@ GET /api/customers/{customer-a-id}/capacities/{customer-b-capacity-id}/snapshots
 - Credentials stored in Key Vault
 - Connection string uses TLS (`sslmode=require`)
 
-**Impact**: If database is compromised, attacker can access all customer data (data-at-rest encryption recommended)
+**Impact**: Database compromise provides access to all customer data and credentials. Data-at-rest encryption is not enabled by default.
 
 ### Admin API Key Theft
 
@@ -290,7 +294,12 @@ GET /api/customers/{customer-a-id}/capacities/{customer-b-capacity-id}/snapshots
 - Only accessible via Container App managed identity
 - Logged API calls for audit trail
 
-**Remediation**: Rotate key in Key Vault, restart Container App
+**Remediation**:
+```bash
+az keyvault secret set --vault-name $VAULT_NAME --name admin-api-key --value $(openssl rand -base64 32)
+az containerapp revision restart --name $APP_NAME --resource-group $RG
+```
+Generate a new admin API key in Key Vault and restart the Container App to load the new value.
 
 ## Compliance and Best Practices
 
@@ -301,27 +310,31 @@ GET /api/customers/{customer-a-id}/capacities/{customer-b-capacity-id}/snapshots
 | A01:2021 - Broken Access Control | ✅ Mitigated | Customer_id validation on all endpoints |
 | A02:2021 - Cryptographic Failures | ✅ Mitigated | TLS for all connections, Key Vault for secrets |
 | A03:2021 - Injection | ✅ Mitigated | SQLAlchemy ORM with parameterized queries |
-| A04:2021 - Insecure Design | ⚠️ Partial | Public customer data endpoints (should add auth) |
+| A04:2021 - Insecure Design | ⚠️ Partial | Customer data endpoints are unauthenticated |
 | A05:2021 - Security Misconfiguration | ✅ Mitigated | Least privilege RBAC, no public database |
 | A07:2021 - Auth Failures | ✅ Mitigated | API key authentication, managed identity |
 
-### Recommendations
+### Security Enhancements
 
-**High Priority**:
-1. Add authentication to customer data endpoints (`/api/customers/{id}/...`)
-2. Implement Row-Level Security (RLS) policies in PostgreSQL
-3. Add rate limiting to prevent DoS attacks
-4. Enable Azure SQL Database encryption at rest
+The following enhancements address identified gaps in the current implementation:
 
-**Medium Priority**:
-5. Add audit logging for all admin operations
-6. Implement secret rotation policies
-7. Add API request logging for security monitoring
-8. Consider Azure Private Link for Key Vault
+**Authentication**:
+- Customer data endpoints (`/api/customers/{id}/capacities`, `/api/customers/{id}/capacities/{id}/metrics`, `/api/customers/{id}/capacities/{id}/snapshots`) are unauthenticated. Application-level filtering prevents cross-customer access, but any user can read customer data if they know the customer ID. Add API key or OAuth2 authentication if this does not align with your threat model.
 
-**Low Priority**:
-9. Add CAPTCHA to prevent automated attacks
-10. Implement IP allowlisting for admin endpoints
+**Database Defense-in-Depth**:
+- PostgreSQL Row-Level Security (RLS) policies are not configured. The application enforces customer_id filtering at the query level. RLS would provide an additional enforcement layer if application logic is bypassed.
+- Data-at-rest encryption is not enabled on PostgreSQL Flexible Server. Enable this if you store PII or are subject to compliance requirements.
+
+**Operational Security**:
+- Admin operations (customer creation, deletion) are not logged for audit purposes. Add structured logging for all admin API calls.
+- Secrets (database password, admin API key, customer client secrets) have no rotation policy. Implement periodic rotation if required by your security policy.
+- Key Vault uses public network access. Private Link is available but not configured in the Bicep templates.
+
+**DoS Protection**:
+- No rate limiting is configured on API endpoints. Add application-level rate limiting or configure Azure Container Apps ingress limits to prevent abuse.
+
+**Perimeter Security**:
+- Admin endpoints are accessible from any IP address. Implement IP allowlisting if you operate from fixed IP ranges.
 
 ## Security Testing
 
@@ -375,8 +388,6 @@ curl "https://{app-url}/api/customers" \
 5. **Recover**: Restore service, notify customers
 6. **Learn**: Post-mortem, update security controls
 
-### Contact Information
+### Disclosure
 
-For security issues, contact: [security contact to be defined]
-
-**Disclosure Policy**: Responsible disclosure within 90 days
+Report security vulnerabilities via GitHub Security Advisories or by opening a private issue. Allow 90 days for remediation before public disclosure.

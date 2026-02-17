@@ -181,7 +181,18 @@ MIT
 
 ## Roadmap
 
-- Phase 1: Backend API for capacity metrics collection
-- Phase 2: Power BI report for visualization
-- Phase 3: SaaS frontend with premium features (alerting, multi-tenant)
+**Completed**:
+- Backend API for capacity metrics collection
+- Multi-customer data isolation
+- Azure VNET and Key Vault integration
+- Customer onboarding automation
+
+**In Progress**:
+- Power BI report templates for capacity visualization
+- Tier 3 CU metric ingestion via notebooks
+
+**Planned**:
+- Web UI for customer management
+- Alerting and notifications (Teams, Slack, webhooks)
+- Cost analysis and optimization recommendations
 
