@@ -16,6 +16,7 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 - Corrected repository name references in Deploy to Azure button and GitHub Actions workflows
+- GitHub Actions workflows now skip Azure deployment when credentials are not configured
 
 ## [0.1.0] - 2026-02-17
 

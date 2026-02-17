@@ -7,13 +7,21 @@ on:
       - completed
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 env:
   IMAGE_NAME: fabriccapacitymonitor
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    if: ${{ (github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch') && vars.CONTAINER_APP_NAME != '' }}
+    
+    # This workflow only runs if Azure variables are configured
+    # Required repository variables: CONTAINER_APP_NAME, RESOURCE_GROUP, ACR_NAME
+    # Required repository secret: AZURE_CREDENTIALS
+    # See docs/howto.md for CI/CD setup instructions
     
     steps:
       - name: Checkout code
