@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.40.2.10011",
-      "templateHash": "7960082211282122429"
+      "templateHash": "3866893762544498440"
     }
   },
   "parameters": {
@@ -1168,7 +1168,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.40.2.10011",
-              "templateHash": "4411120209051492200"
+              "templateHash": "4976469815111349186"
             }
           },
           "parameters": {
@@ -1362,6 +1362,38 @@
                         {
                           "name": "LOG_LEVEL",
                           "value": "INFO"
+                        }
+                      ],
+                      "probes": [
+                        {
+                          "type": "Startup",
+                          "httpGet": {
+                            "path": "/health",
+                            "port": 8000
+                          },
+                          "initialDelaySeconds": 15,
+                          "periodSeconds": 10,
+                          "failureThreshold": 30
+                        },
+                        {
+                          "type": "Liveness",
+                          "httpGet": {
+                            "path": "/health",
+                            "port": 8000
+                          },
+                          "initialDelaySeconds": 30,
+                          "periodSeconds": 15,
+                          "failureThreshold": 3
+                        },
+                        {
+                          "type": "Readiness",
+                          "httpGet": {
+                            "path": "/health",
+                            "port": 8000
+                          },
+                          "initialDelaySeconds": 15,
+                          "periodSeconds": 10,
+                          "failureThreshold": 3
                         }
                       ]
                     }
