@@ -47,6 +47,10 @@ param alertEmails string = ''
 var alertEmailsArray = empty(alertEmails) ? [] : split(alertEmails, ',')
 
 var nameSuffix = uniqueString(resourceGroup().id)
+// Strip hyphens for resources that only allow alphanumeric characters (storage, ACR).
+// Storage is capped at 24 chars: "st" (2) + 9 appName chars + 13-char uniqueString = 24.
+// ACR is capped at 50 chars: "acr" (3) + 34 appName chars + 13-char uniqueString = 50.
+var safeAppName = replace(appName, '-', '')
 var tags = {
   Owner: ownerName
   Environment: environmentType
@@ -92,7 +96,7 @@ module registry 'modules/registry.bicep' = {
   name: 'registry-deployment'
   params: {
     location: location
-    registryName: 'acr${appName}${nameSuffix}'
+    registryName: 'acr${take(safeAppName, 34)}${nameSuffix}'
     managedIdentityPrincipalId: identity.outputs.principalId
     tags: tags
   }
@@ -102,7 +106,7 @@ module storage 'modules/storage.bicep' = {
   name: 'storage-deployment'
   params: {
     location: location
-    storageAccountName: 'st${appName}${nameSuffix}'
+    storageAccountName: 'st${take(safeAppName, 9)}${nameSuffix}'
     managedIdentityPrincipalId: identity.outputs.principalId
     tags: tags
   }

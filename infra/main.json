@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.40.2.10011",
-      "templateHash": "13447627002521738017"
+      "templateHash": "12146919778577134002"
     }
   },
   "parameters": {
@@ -95,6 +95,7 @@
   "variables": {
     "alertEmailsArray": "[if(empty(parameters('alertEmails')), createArray(), split(parameters('alertEmails'), ','))]",
     "nameSuffix": "[uniqueString(resourceGroup().id)]",
+    "safeAppName": "[replace(parameters('appName'), '-', '')]",
     "tags": {
       "Owner": "[parameters('ownerName')]",
       "Environment": "[parameters('environmentType')]",
@@ -659,7 +660,7 @@
             "value": "[parameters('location')]"
           },
           "registryName": {
-            "value": "[format('acr{0}{1}', parameters('appName'), variables('nameSuffix'))]"
+            "value": "[format('acr{0}{1}', take(variables('safeAppName'), 34), variables('nameSuffix'))]"
           },
           "managedIdentityPrincipalId": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', 'identity-deployment'), '2025-04-01').outputs.principalId.value]"
@@ -772,7 +773,7 @@
             "value": "[parameters('location')]"
           },
           "storageAccountName": {
-            "value": "[format('st{0}{1}', parameters('appName'), variables('nameSuffix'))]"
+            "value": "[format('st{0}{1}', take(variables('safeAppName'), 9), variables('nameSuffix'))]"
           },
           "managedIdentityPrincipalId": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', 'identity-deployment'), '2025-04-01').outputs.principalId.value]"
