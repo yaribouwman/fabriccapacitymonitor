@@ -47,27 +47,23 @@ flowchart LR
     App -->|Store metrics| DB
 ```
 
-## Quick Start
+## Getting Started
 
-### Deploy via Button
+Choose your deployment method:
 
-Click the "Deploy to Azure" button above. Fill in:
-- **App Name**: Your application name (3-20 characters)
-- **Environment Type**: Starter or Enterprise
-- **Region**: Azure region (e.g., EU West)
+**For smaller organizations or quick setup:**  
+Click the "Deploy to Azure" button above. No command line needed.  
+→ [Portal Deployment Guide](docs/deployment/portal.md)
 
-Wait 10-15 minutes. The deployment will output your Container App URL.
+**For IT teams and automation:**  
+Use the CLI script for command-line deployment.  
+→ [CLI Deployment Guide](docs/deployment/cli.md)
 
-### Deploy via CLI
+**For large organizations with DevOps:**  
+Deploy with Bicep and CI/CD pipelines.  
+→ [Enterprise Deployment Guide](docs/deployment/enterprise.md)
 
-```bash
-git clone https://github.com/yaribouwman/fabriccapacitymonitor.git
-cd fabriccapacitymonitor
-
-./deploy.sh -g rg-fabricmon-prod -l eastus -n fabricmon -e Enterprise
-```
-
-See [docs/deployment.md](docs/deployment.md) for detailed deployment guides and [docs/operations.md](docs/operations.md) for operational procedures.
+[View all deployment options →](docs/deployment.md)
 
 ## Customer Onboarding
 
