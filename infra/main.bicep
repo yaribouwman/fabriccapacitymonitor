@@ -16,7 +16,7 @@ param appName string
 param environmentType string = 'Starter'
 
 @description('Container image to deploy')
-param containerImage string = 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
+param containerImage string = 'ghcr.io/yaribouwman/fabriccapacitymonitor:latest'
 
 @description('Database administrator login')
 param databaseAdminLogin string = 'dbadmin'

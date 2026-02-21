@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.40.2.10011",
-      "templateHash": "14399103421114921769"
+      "templateHash": "7960082211282122429"
     }
   },
   "parameters": {
@@ -37,7 +37,7 @@
     },
     "containerImage": {
       "type": "string",
-      "defaultValue": "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest",
+      "defaultValue": "ghcr.io/yaribouwman/fabriccapacitymonitor:latest",
       "metadata": {
         "description": "Container image to deploy"
       }

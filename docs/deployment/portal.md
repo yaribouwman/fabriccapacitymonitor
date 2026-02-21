@@ -43,8 +43,8 @@ You'll see a progress screen showing which resources are being created. Don't cl
 
 When deployment completes (green checkmark):
 
-1. Click **"Go to resource group"**
-2. Look for the **Outputs** tab on the left side
+1. Stay on the deployment completion screen
+2. Click the **Outputs** tab in the left menu (under "Deployment details")
 3. Find **appUrl** - this is your monitoring system URL
 4. Copy this URL - you'll need it to add customers
 
