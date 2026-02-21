@@ -44,21 +44,43 @@ This is the same pattern used by Azure Managed Service Providers (MSPs) and is a
 
 ---
 
-## Setup Instructions
+## Setup Options
 
-### Prerequisites
+Choose the option that best fits your organization's processes and security requirements. All three options create identical Service Principals with identical permissions.
 
-- Access to [portal.azure.com](https://portal.azure.com)
-- Azure Administrator or Owner role on your Fabric capacity resource
-- 10 minutes of time
+### Option A: Quick Portal Setup
+
+**Best for**: Small organizations, fast setup, minimal tooling requirements  
+**Time required**: 5 minutes  
+**Requirements**: Access to [portal.azure.com](https://portal.azure.com)
+
+[Jump to Portal Setup Instructions](#option-a-portal-setup-instructions)
+
+### Option B: CLI Script
+
+**Best for**: Medium organizations, repeatable setup, security review  
+**Time required**: 5 minutes  
+**Requirements**: Azure CLI installed, bash shell
+
+[Jump to CLI Script Instructions](#option-b-cli-script-instructions)
+
+### Option C: Infrastructure as Code (Bicep)
+
+**Best for**: Enterprise organizations, change management, audit trails  
+**Time required**: 10 minutes  
+**Requirements**: Azure CLI, familiarity with Bicep/ARM deployments
+
+[Jump to Bicep IaC Instructions](#option-c-bicep-iac-instructions)
+
+---
+
+## Option A: Portal Setup Instructions
 
 ### Step 1: Sign In to Azure Portal
 
 1. Go to [portal.azure.com](https://portal.azure.com)
 2. Sign in with your work account
 3. Verify you're in the correct directory/tenant
-
----
 
 ### Step 2: Create Service Principal
 
@@ -76,8 +98,6 @@ This is the same pattern used by Azure Managed Service Providers (MSPs) and is a
    - **Application (client) ID**: (looks like: 12345678-1234-1234-1234-123456789abc)
    - **Directory (tenant) ID**: (looks like: 87654321-4321-4321-4321-210987654321)
 
----
-
 ### Step 3: Create Client Secret
 
 1. In the left menu, click **"Certificates & secrets"**
@@ -87,8 +107,6 @@ This is the same pattern used by Azure Managed Service Providers (MSPs) and is a
 5. Click **"Add"**
 6. **IMMEDIATELY copy the Value** - you'll never see it again!
    - Looks like: `abc123~defGHI456...`
-
----
 
 ### Step 4: Grant Access to Fabric Capacity
 
@@ -104,8 +122,6 @@ This is the same pattern used by Azure Managed Service Providers (MSPs) and is a
 
 **Verification**: You should see "FabricCapacityMonitor-ReadOnly" with "Reader" role in the list.
 
----
-
 ### Step 5: Get Resource Information
 
 On your Fabric capacity overview page, note:
@@ -113,9 +129,7 @@ On your Fabric capacity overview page, note:
 - **Resource Group**: (visible in the overview)
 - **Capacity Name**: (the name you clicked on)
 
----
-
-### Step 6: Send Credentials to Us
+### Step 6: Send Credentials to Your Consultant
 
 Please send the following information via secure email:
 
@@ -146,18 +160,139 @@ Best regards,
 
 ---
 
-## What Happens Next
+## Option B: CLI Script Instructions
 
-1. We'll add your organization to our monitoring system
-2. Within 15 minutes, we'll confirm data collection is working
-3. We may provide an optional "Ingest Key" for detailed CU metrics (requires deploying a Fabric notebook)
-4. We'll set up monitoring dashboards and alerts for your capacity
+### Prerequisites
+
+- Azure CLI installed (`az --version`)
+- Bash shell (Linux, macOS, WSL, or Git Bash on Windows)
+- Azure Administrator or Owner role on your Fabric capacity
+
+### Step 1: Download the Script
+
+Download the `setup-customer.sh` script from your consultant or from the GitHub repository.
+
+### Step 2: Review the Script
+
+Before running any script, review its contents:
+
+```bash
+cat setup-customer.sh
+```
+
+The script performs these actions:
+1. Checks Azure CLI is installed and you're logged in
+2. Creates an App Registration in your tenant
+3. Creates a client secret
+4. Grants Reader role on your Fabric capacity
+5. Outputs the credentials to share with your consultant
+
+### Step 3: Sign In to Azure
+
+```bash
+az login
+```
+
+### Step 4: Run the Script
+
+```bash
+bash setup-customer.sh
+```
+
+The script will prompt you for:
+- **Subscription ID**: Your Azure subscription ID
+- **Capacity Resource ID**: Full resource ID of your Fabric capacity (or leave empty to scan entire subscription)
+
+### Step 5: Save the Output
+
+The script outputs:
+- Tenant ID
+- Client ID
+- Client Secret
+- Subscription ID
+- Resource ID (if provided)
+
+**Copy these values and send them to your consultant via secure channel.**
 
 ---
 
-## Optional: Detailed CU Metrics (Tier 3)
+## Option C: Bicep IaC Instructions
 
-For deeper insights into Capacity Unit (CU) utilization, you can optionally deploy a Fabric notebook that pushes CU metrics to our monitoring system.
+### Prerequisites
+
+- Azure CLI installed
+- Familiarity with Azure Bicep/ARM templates
+- Your organization's change management process
+
+### Step 1: Download the Bicep Template
+
+Download these files from your consultant or GitHub repository:
+- `setup-customer.bicep`
+- `bicepconfig.json` (optional)
+
+### Step 2: Review the Template
+
+Review the Bicep template to understand the resources being created:
+
+```bash
+cat setup-customer.bicep
+```
+
+The template creates:
+1. Azure AD App Registration
+2. Service Principal
+3. Role assignment (Reader) on the Fabric capacity
+
+### Step 3: Submit for Change Management
+
+If your organization requires change management for infrastructure changes, submit the Bicep template through your standard approval process.
+
+### Step 4: Deploy the Template
+
+```bash
+az login
+
+az deployment subscription create \
+  --location eastus \
+  --template-file setup-customer.bicep \
+  --parameters appName=FabricCapacityMonitor-ReadOnly \
+  --parameters capacityResourceId=/subscriptions/.../Microsoft.Fabric/capacities/...
+```
+
+### Step 5: Get Deployment Outputs
+
+The deployment outputs:
+- Tenant ID
+- Client ID
+- Service Principal ID
+
+### Step 6: Create Client Secret Manually
+
+Bicep cannot output secrets for security reasons. Create the client secret manually:
+
+1. Go to Azure Portal → **Entra ID** → **App registrations**
+2. Find `FabricCapacityMonitor-ReadOnly`
+3. Go to **Certificates & secrets** → **New client secret**
+4. Copy the secret value
+
+### Step 7: Send Credentials to Your Consultant
+
+Send the Tenant ID, Client ID, Client Secret, and Subscription ID to your consultant via secure channel.
+
+---
+
+## What Happens Next
+
+1. Your consultant will add your organization to their monitoring system
+2. Within 15 minutes, they'll confirm data collection is working
+3. They may provide an optional "Ingest Key" for detailed CU metrics (requires deploying a Fabric notebook)
+4. They'll set up monitoring dashboards and alerts for your capacity
+
+---
+
+## Optional: Detailed CU Metrics
+
+For deeper insights into Capacity Unit (CU) utilization, you can optionally deploy a Fabric notebook that pushes CU metrics to the monitoring system.
 
 **Benefits:**
 - See CU utilization percentages over time
@@ -166,10 +301,10 @@ For deeper insights into Capacity Unit (CU) utilization, you can optionally depl
 - Compare utilization across multiple capacities
 
 **Setup:**
-1. We'll provide a Python notebook template
+1. Your consultant will provide a Python notebook template
 2. You deploy it in your Fabric workspace
 3. Schedule it to run every 15 minutes
-4. Uses an "Ingest Key" (we'll provide) for authentication
+4. Uses an "Ingest Key" (provided by consultant) for authentication
 
 **Requirements:**
 - Capacity Admin role in your Fabric tenant
@@ -187,13 +322,13 @@ After 15 minutes:
 2. Filter by "Operation name" → "List Fabric Capacities"
 3. You should see API calls from "FabricCapacityMonitor-ReadOnly"
 
-You can also ask us to confirm - we'll see your capacity state and SKU in our dashboard.
+You can also ask your consultant to confirm - they'll see your capacity state and SKU in their dashboard.
 
 ---
 
 ## How to Revoke Access
 
-If you need to remove our access at any time:
+If you need to remove access at any time:
 
 1. Go to Azure Portal → Your Fabric Capacity
 2. Click **"Access control (IAM)"**
@@ -201,7 +336,7 @@ If you need to remove our access at any time:
 4. Click **"..."** → **"Remove"**
 5. Confirm removal
 
-**Access is revoked immediately** - we'll stop receiving data within 15 minutes.
+**Access is revoked immediately** - data collection will stop within 15 minutes.
 
 ---
 
@@ -226,10 +361,10 @@ A: This uses standard Azure RBAC with least-privilege access. It's the same patt
 A: We store: capacity state (Active/Paused), SKU tier (F2/F4/F64), Azure region, and timestamps. If you enable Tier 3, we also store CU utilization percentages and overload events.
 
 **Q: Where is the data stored?**  
-A: In our Azure subscription, in a PostgreSQL database with private networking and encryption at rest.
+A: In your consultant's Azure subscription, in a PostgreSQL database with private networking and encryption at rest.
 
 **Q: Can other customers see our data?**  
-A: No. Data is isolated per customer with database-level segregation. We cannot and do not share customer data.
+A: No. Data is isolated per customer with database-level segregation. Your consultant cannot and does not share customer data.
 
 ---
 
@@ -249,7 +384,7 @@ A: No. Data is isolated per customer with database-level segregation. We cannot 
 
 ---
 
-## Contact Us
+## Contact Your Consultant
 
 If you have questions or need assistance:
 
@@ -258,16 +393,6 @@ If you have questions or need assistance:
 - **Support Portal**: [your support URL]
 
 We typically respond within 4 business hours.
-
----
-
-## Detailed Technical Documentation
-
-For technical staff who want deeper details:
-
-- **Full Architecture**: [Link to architecture.md in your repo]
-- **Security Model**: [Link to security docs]
-- **API Permissions Reference**: [Link to Microsoft docs on Fabric RBAC]
 
 ---
 
@@ -282,4 +407,4 @@ For technical staff who want deeper details:
 
 **Thank you for trusting us with your Fabric capacity monitoring!**
 
-Once you've completed the setup, please send us the credentials using the template in Step 6. We'll confirm everything is working within 1 business day.
+Once you've completed the setup, please send us the credentials using the template above. We'll confirm everything is working within 1 business day.
