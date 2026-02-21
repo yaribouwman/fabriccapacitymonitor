@@ -9,7 +9,7 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 - `alertEmails` parameter now accepts a comma-separated string instead of an array, fixing the Azure portal deployment error
-- Storage account and registry names now strip hyphens and truncate to meet Azure naming constraints
+- Storage account, registry, key vault, and container app names now strip hyphens and truncate to meet Azure naming constraints
 - Corrected repository name references in Deploy to Azure button and GitHub Actions workflows
 - GitHub Actions workflows now skip Azure deployment when credentials are not configured
 

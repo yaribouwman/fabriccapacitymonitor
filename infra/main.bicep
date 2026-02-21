@@ -118,7 +118,7 @@ module keyVault 'modules/keyvault.bicep' = {
   name: 'keyvault-deployment'
   params: {
     location: location
-    keyVaultName: 'kv-${appName}-${nameSuffix}'
+    keyVaultName: 'kv-${take(safeAppName, 7)}-${nameSuffix}'
     managedIdentityPrincipalId: identity.outputs.principalId
     databaseConnectionString: databaseConnectionString
     adminApiKey: adminApiKey
@@ -133,8 +133,8 @@ module containerApp 'modules/container-app.bicep' = {
   name: 'containerapp-deployment'
   params: {
     location: location
-    environmentName: 'cae-${appName}-${nameSuffix}'
-    appName: 'ca-${appName}-${nameSuffix}'
+    environmentName: 'cae-${take(safeAppName, 10)}-${nameSuffix}'
+    appName: 'ca-${take(safeAppName, 14)}-${nameSuffix}'
     environmentType: environmentType
     subnetId: network.outputs.appSubnetId
     managedIdentityId: identity.outputs.identityId

@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.40.2.10011",
-      "templateHash": "12146919778577134002"
+      "templateHash": "16395526164714529249"
     }
   },
   "parameters": {
@@ -901,7 +901,7 @@
             "value": "[parameters('location')]"
           },
           "keyVaultName": {
-            "value": "[format('kv-{0}-{1}', parameters('appName'), variables('nameSuffix'))]"
+            "value": "[format('kv-{0}-{1}', take(variables('safeAppName'), 7), variables('nameSuffix'))]"
           },
           "managedIdentityPrincipalId": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', 'identity-deployment'), '2025-04-01').outputs.principalId.value]"
@@ -1176,10 +1176,10 @@
             "value": "[parameters('location')]"
           },
           "environmentName": {
-            "value": "[format('cae-{0}-{1}', parameters('appName'), variables('nameSuffix'))]"
+            "value": "[format('cae-{0}-{1}', take(variables('safeAppName'), 10), variables('nameSuffix'))]"
           },
           "appName": {
-            "value": "[format('ca-{0}-{1}', parameters('appName'), variables('nameSuffix'))]"
+            "value": "[format('ca-{0}-{1}', take(variables('safeAppName'), 14), variables('nameSuffix'))]"
           },
           "environmentType": {
             "value": "[parameters('environmentType')]"
