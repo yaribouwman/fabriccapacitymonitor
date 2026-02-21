@@ -372,9 +372,9 @@ CREATE INDEX idx_metrics_capacity_name ON capacity_metrics(capacity_id, metric_n
 
 ## Next Steps
 
-- [Add more customers](first-customer.md)
-- [Monitor operations](howto.md#part-3-operations)
-- [Scale infrastructure](howto.md#scale-from-starter-to-enterprise)
+- [Add more customers](onboarding.md)
+- [Monitor operations](operations.md)
+- [Scale infrastructure](operations.md#scale-from-starter-to-enterprise)
 - Build alerting (send Teams/email when utilization > 80%)
 
 ## Resources

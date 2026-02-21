@@ -67,7 +67,7 @@ cd fabriccapacitymonitor
 ./deploy.sh -g rg-fabricmon-prod -l eastus -n fabricmon -e Enterprise
 ```
 
-See [docs/howto.md](docs/howto.md) for detailed deployment guides, CI/CD setup, and operational procedures.
+See [docs/deployment.md](docs/deployment.md) for detailed deployment guides and [docs/operations.md](docs/operations.md) for operational procedures.
 
 ## Customer Onboarding
 
@@ -75,24 +75,17 @@ Once your infrastructure is deployed, onboarding a new customer takes two steps:
 
 ### Step 1: Customer Grants Access (10 minutes)
 
-Send your customer one of these guides:
+Send your customer the appropriate setup guide:
 
-#### Option A: Azure Portal Guide (Recommended for Non-Technical Users)
-- **Guide**: [Customer Portal Setup](docs/customer-portal-setup.md)
-- **Format**: Screenshot-based walkthrough
-- **Best for**: Fabric administrators, business users, small organizations
-- **Time**: 10 minutes
+- **English**: [onboarding/en/customer-guide.md](onboarding/en/customer-guide.md)
+- **Dutch**: [onboarding/nl/customer-guide.md](onboarding/nl/customer-guide.md)
 
-#### Option B: Complete Package (Send-to-Customer PDF)
-- **Guide**: [Customer Package](onboarding/CUSTOMER_PACKAGE.md)
-- **Format**: Executive summary + technical setup + FAQ
-- **Best for**: Professional services engagements
-- **Can be converted to PDF**: `pandoc onboarding/CUSTOMER_PACKAGE.md -o customer-setup.pdf`
+The customer guide provides three setup options:
+- **Option A: Portal Setup** - Quick Azure Portal walkthrough (5 minutes, no tooling)
+- **Option B: CLI Script** - Auditable bash script for repeatable setup
+- **Option C: Bicep IaC** - Infrastructure-as-Code for enterprise change management
 
-#### Option C: Technical Scripts (For IT Teams)
-- **CLI Script**: [setup-customer.sh](onboarding/setup-customer.sh) - Bash automation
-- **Bicep IaC**: [setup-customer.bicep](onboarding/setup-customer.bicep) - Infrastructure as Code
-- **Best for**: Enterprise IT, DevOps teams with automation requirements
+All three options create identical Service Principals with identical permissions.
 
 **What customers do**: Create a Service Principal with Azure "Reader" role on their Fabric capacity, then send you 4 values (Tenant ID, Client ID, Client Secret, Subscription ID).
 
@@ -117,7 +110,7 @@ For detailed Capacity Unit (CU) utilization metrics:
 
 **Benefits**: Long-term CU retention (beyond built-in 14-day limit), overload tracking, cross-customer utilization dashboards.
 
-See [docs/first-customer.md](docs/first-customer.md) for a complete walkthrough with verification steps.
+See [docs/onboarding.md](docs/onboarding.md) for a complete walkthrough with verification steps.
 
 ## Security Posture
 
@@ -163,11 +156,14 @@ This deployment follows Azure best practices for enterprise security:
 
 ## Documentation
 
-- [Security](docs/security.md) - Complete security architecture, threat model, and best practices
+- [Deployment](docs/deployment.md) - Complete deployment guide for all methods (Portal, CLI, CI/CD)
+- [Customer Onboarding](docs/onboarding.md) - Guide for adding customers to the monitoring system
+- [Operations](docs/operations.md) - Day-to-day operations and maintenance tasks
+- [Power BI Setup](docs/powerbi-setup.md) - Connect Power BI and build dashboards
 - [Architecture](docs/architecture.md) - Component diagrams, network topology, cross-tenant data flows
+- [Security](docs/security.md) - Complete security architecture, threat model, and best practices
 - [Decisions](docs/decisions.md) - ADR-style records for key technical choices
-- [How-To](docs/howto.md) - Step-by-step guides for deployment and operations
-- [Customer Onboarding](onboarding/README.md) - Security brief and setup guides for customers
+- [Customer Guides](onboarding/README.md) - Customer-facing setup guides (English and Dutch)
 
 ## Development
 

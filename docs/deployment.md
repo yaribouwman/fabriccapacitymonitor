@@ -274,14 +274,14 @@ az keyvault secret show \
 
 After successful deployment:
 
-1. **Add your first customer:** See [docs/first-customer.md](first-customer.md)
-2. **Connect Power BI:** See [docs/powerbi-setup.md](powerbi-setup.md)
-3. **Monitor operations:** See [docs/howto.md](howto.md#part-3-operations)
+1. **Add your first customer:** See [onboarding.md](onboarding.md)
+2. **Connect Power BI:** See [powerbi-setup.md](powerbi-setup.md)
+3. **Monitor operations:** See [operations.md](operations.md)
 
 ## Support
 
 For issues:
 1. Check container logs: `az containerapp logs show`
-2. Review [docs/architecture.md](architecture.md) for system design
-3. Check [docs/decisions.md](decisions.md) for architectural decisions
+2. Review [architecture.md](architecture.md) for system design
+3. Check [decisions.md](decisions.md) for architectural decisions
 4. Open an issue in the GitHub repository
