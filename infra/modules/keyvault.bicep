@@ -7,14 +7,6 @@ param keyVaultName string
 @description('Principal ID of the managed identity to grant access')
 param managedIdentityPrincipalId string
 
-@description('Database connection string to store')
-@secure()
-param databaseConnectionString string
-
-@description('Admin API key to store')
-@secure()
-param adminApiKey string
-
 @description('Environment type: Starter or Enterprise')
 @allowed(['Starter', 'Enterprise'])
 param environmentType string = 'Starter'
@@ -63,22 +55,6 @@ resource secretsUserRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = 
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6')
     principalId: managedIdentityPrincipalId
     principalType: 'ServicePrincipal'
-  }
-}
-
-resource databaseConnectionStringSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  parent: keyVault
-  name: 'db-connection-string'
-  properties: {
-    value: databaseConnectionString
-  }
-}
-
-resource adminApiKeySecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  parent: keyVault
-  name: 'admin-api-key'
-  properties: {
-    value: adminApiKey
   }
 }
 
@@ -142,6 +118,3 @@ output keyVaultName string = keyVault.name
 
 @description('URI of the Key Vault')
 output keyVaultUri string = keyVault.properties.vaultUri
-
-@description('URI of the database connection string secret')
-output databaseConnectionStringSecretUri string = databaseConnectionStringSecret.properties.secretUri

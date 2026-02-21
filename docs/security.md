@@ -85,8 +85,7 @@ Protected by **X-Admin-Key** header authentication:
 
 **Admin API Key**:
 - Generated during deployment (`newGuid()` in Bicep)
-- Stored in Azure Key Vault (`admin-api-key` secret)
-- Injected into Container App via secret reference
+- Stored as a secure Container App environment secret
 - Never logged or exposed in deployment outputs
 
 #### Ingest Endpoint
@@ -160,22 +159,26 @@ The application relies on application-level filtering. RLS policies would provid
 
 ### Secret Storage
 
-All secrets stored in **Azure Key Vault**:
+Secrets are stored in two locations based on their lifecycle:
 
+**Azure Container App Secrets** (Application secrets):
 | Secret | Purpose | Rotation |
 |--------|---------|----------|
 | `db-connection-string` | PostgreSQL connection | Manual |
 | `admin-api-key` | Admin API authentication | Manual |
+
+**Azure Key Vault** (Customer secrets):
+| Secret | Purpose | Rotation |
+|--------|---------|----------|
 | `customer-{uuid}-secret` | Customer Azure SP credentials | Customer-managed |
 
 ### Secret Access
 
 **Container App** retrieves secrets via:
 
-1. Managed identity authenticates to Key Vault
-2. Container Apps runtime fetches secrets at startup
-3. Secrets injected as environment variables
-4. Application code accesses via `os.environ`
+1. Application secrets (`db-connection-string`, `admin-api-key`) are injected directly as environment variables from the Container App's secure store
+2. Customer secrets are fetched at runtime from Key Vault using the managed identity
+3. Application code accesses via `os.environ` or Azure SDK
 
 **No Secrets in Code**:
 - No hardcoded credentials
@@ -290,16 +293,15 @@ Rotate the ingest key directly in the database, then notify the customer.
 **Scenario**: Attacker obtains admin API key
 
 **Mitigation**:
-- Key stored in Key Vault (no code/config files)
-- Only accessible via Container App managed identity
+- Key stored in secure Container App secret store (no code/config files)
+- Only accessible inside the Container App environment
 - Logged API calls for audit trail
 
 **Remediation**:
 ```bash
-az keyvault secret set --vault-name $VAULT_NAME --name admin-api-key --value $(openssl rand -base64 32)
-az containerapp revision restart --name $APP_NAME --resource-group $RG
+az containerapp secret set --name $APP_NAME --resource-group $RG --secret-name admin-api-key --value $(openssl rand -base64 32)
 ```
-Generate a new admin API key in Key Vault and restart the Container App to load the new value.
+Generate a new admin API key in the Container App secrets; the app will automatically use the new value on the next request or restart.
 
 ## Compliance and Best Practices
 

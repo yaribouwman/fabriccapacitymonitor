@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.40.2.10011",
-      "templateHash": "16395526164714529249"
+      "templateHash": "2652305406267153199"
     }
   },
   "parameters": {
@@ -906,12 +906,6 @@
           "managedIdentityPrincipalId": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', 'identity-deployment'), '2025-04-01').outputs.principalId.value]"
           },
-          "databaseConnectionString": {
-            "value": "[format('postgresql://{0}:{1}@{2}:5432/{3}?sslmode=require', parameters('databaseAdminLogin'), parameters('databaseAdminPassword'), reference(resourceId('Microsoft.Resources/deployments', 'database-deployment'), '2025-04-01').outputs.fqdn.value, parameters('databaseName'))]"
-          },
-          "adminApiKey": {
-            "value": "[parameters('adminApiKey')]"
-          },
           "environmentType": {
             "value": "[parameters('environmentType')]"
           },
@@ -932,7 +926,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.40.2.10011",
-              "templateHash": "17550649830410798082"
+              "templateHash": "15522470767955084944"
             }
           },
           "parameters": {
@@ -952,18 +946,6 @@
               "type": "string",
               "metadata": {
                 "description": "Principal ID of the managed identity to grant access"
-              }
-            },
-            "databaseConnectionString": {
-              "type": "securestring",
-              "metadata": {
-                "description": "Database connection string to store"
-              }
-            },
-            "adminApiKey": {
-              "type": "securestring",
-              "metadata": {
-                "description": "Admin API key to store"
               }
             },
             "environmentType": {
@@ -1018,7 +1000,7 @@
                 "enablePurgeProtection": "[equals(parameters('environmentType'), 'Enterprise')]",
                 "enabledForDeployment": false,
                 "enabledForDiskEncryption": false,
-                "enabledForTemplateDeployment": false,
+                "enabledForTemplateDeployment": true,
                 "publicNetworkAccess": "[if(equals(parameters('environmentType'), 'Enterprise'), 'Disabled', 'Enabled')]",
                 "networkAcls": "[if(equals(parameters('environmentType'), 'Starter'), createObject('bypass', 'AzureServices', 'defaultAction', 'Allow'), createObject('bypass', 'AzureServices', 'defaultAction', 'Deny'))]"
               }
@@ -1032,28 +1014,6 @@
                 "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6')]",
                 "principalId": "[parameters('managedIdentityPrincipalId')]",
                 "principalType": "ServicePrincipal"
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
-              ]
-            },
-            {
-              "type": "Microsoft.KeyVault/vaults/secrets",
-              "apiVersion": "2023-07-01",
-              "name": "[format('{0}/{1}', parameters('keyVaultName'), 'db-connection-string')]",
-              "properties": {
-                "value": "[parameters('databaseConnectionString')]"
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
-              ]
-            },
-            {
-              "type": "Microsoft.KeyVault/vaults/secrets",
-              "apiVersion": "2023-07-01",
-              "name": "[format('{0}/{1}', parameters('keyVaultName'), 'admin-api-key')]",
-              "properties": {
-                "value": "[parameters('adminApiKey')]"
               },
               "dependsOn": [
                 "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
@@ -1145,19 +1105,11 @@
                 "description": "URI of the Key Vault"
               },
               "value": "[reference(resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName')), '2023-07-01').vaultUri]"
-            },
-            "databaseConnectionStringSecretUri": {
-              "type": "string",
-              "metadata": {
-                "description": "URI of the database connection string secret"
-              },
-              "value": "[reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), 'db-connection-string'), '2023-07-01').secretUri]"
             }
           }
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'database-deployment')]",
         "[resourceId('Microsoft.Resources/deployments', 'identity-deployment')]",
         "[resourceId('Microsoft.Resources/deployments', 'network-deployment')]"
       ]
@@ -1190,6 +1142,12 @@
           "managedIdentityId": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', 'identity-deployment'), '2025-04-01').outputs.identityId.value]"
           },
+          "databaseConnectionString": {
+            "value": "[format('postgresql://{0}:{1}@{2}:5432/{3}?sslmode=require', parameters('databaseAdminLogin'), parameters('databaseAdminPassword'), reference(resourceId('Microsoft.Resources/deployments', 'database-deployment'), '2025-04-01').outputs.fqdn.value, parameters('databaseName'))]"
+          },
+          "adminApiKey": {
+            "value": "[parameters('adminApiKey')]"
+          },
           "containerImage": {
             "value": "[parameters('containerImage')]"
           },
@@ -1210,7 +1168,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.40.2.10011",
-              "templateHash": "9115035821742477070"
+              "templateHash": "4411120209051492200"
             }
           },
           "parameters": {
@@ -1252,6 +1210,18 @@
               "type": "string",
               "metadata": {
                 "description": "Resource ID of the user assigned managed identity"
+              }
+            },
+            "databaseConnectionString": {
+              "type": "securestring",
+              "metadata": {
+                "description": "Database connection string"
+              }
+            },
+            "adminApiKey": {
+              "type": "securestring",
+              "metadata": {
+                "description": "Admin API key"
               }
             },
             "containerImage": {
@@ -1343,13 +1313,11 @@
                   "secrets": [
                     {
                       "name": "db-connection-string",
-                      "keyVaultUrl": "[format('https://{0}.vault.azure.net/secrets/db-connection-string', parameters('keyVaultName'))]",
-                      "identity": "[parameters('managedIdentityId')]"
+                      "value": "[parameters('databaseConnectionString')]"
                     },
                     {
                       "name": "admin-api-key",
-                      "keyVaultUrl": "[format('https://{0}.vault.azure.net/secrets/admin-api-key', parameters('keyVaultName'))]",
-                      "identity": "[parameters('managedIdentityId')]"
+                      "value": "[parameters('adminApiKey')]"
                     },
                     {
                       "name": "storage-connection-string",
@@ -1445,6 +1413,7 @@
         }
       },
       "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'database-deployment')]",
         "[resourceId('Microsoft.Resources/deployments', 'identity-deployment')]",
         "[resourceId('Microsoft.Resources/deployments', 'keyvault-deployment')]",
         "[resourceId('Microsoft.Resources/deployments', 'network-deployment')]",

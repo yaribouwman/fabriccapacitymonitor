@@ -59,10 +59,11 @@ az postgres flexible-server firewall-rule create \
 ### Step 3: Get Connection Details
 
 ```bash
-# Get database connection string from Key Vault
-az keyvault secret show \
-  --vault-name kv-fabricmon-prod \
-  --name db-connection-string \
+# Get database connection string from Container App secrets
+az containerapp secret show \
+  --name ca-fabricmon-prod \
+  --resource-group rg-fabricmon-prod \
+  --secret-name db-connection-string \
   --query value -o tsv
 ```
 
@@ -73,7 +74,7 @@ Extract the server hostname, database name, username, and password from the conn
 1. Open Power BI Desktop
 2. **Get Data** → **PostgreSQL database**
 3. Enter the server hostname and database name from the connection string
-4. Authenticate with **Database** method using the username and password from Key Vault
+4. Authenticate with **Database** method using the username and password from the connection string
 
 ### Step 5: Load Tables
 
@@ -157,7 +158,7 @@ On the gateway VM:
      - **Port**: `5432`
      - **Database**: `fabricmon`
      - **User Name**: `dbadmin`
-     - **Password**: (from Key Vault)
+     - **Password**: (from connection string)
      - **SSL Mode**: `require`
    - Click **Test** to verify connection
 

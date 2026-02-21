@@ -120,8 +120,6 @@ module keyVault 'modules/keyvault.bicep' = {
     location: location
     keyVaultName: 'kv-${take(safeAppName, 7)}-${nameSuffix}'
     managedIdentityPrincipalId: identity.outputs.principalId
-    databaseConnectionString: databaseConnectionString
-    adminApiKey: adminApiKey
     environmentType: environmentType
     privateEndpointSubnetId: network.outputs.privateEndpointSubnetId
     vnetId: network.outputs.vnetId
@@ -138,6 +136,8 @@ module containerApp 'modules/container-app.bicep' = {
     environmentType: environmentType
     subnetId: network.outputs.appSubnetId
     managedIdentityId: identity.outputs.identityId
+    databaseConnectionString: databaseConnectionString
+    adminApiKey: adminApiKey
     containerImage: containerImage
     keyVaultName: keyVault.outputs.keyVaultName
     storageConnectionString: storage.outputs.connectionString

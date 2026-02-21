@@ -47,14 +47,13 @@ az containerapp update \
 
 The database is not publicly accessible. To connect for debugging:
 
-1. Retrieve the connection string from Key Vault:
+1. Retrieve the connection string from the Container App:
 
 ```bash
-KV_NAME="kv-fabricmon-<unique-id>"
-
-az keyvault secret show \
-  --vault-name $KV_NAME \
-  --name db-connection-string \
+az containerapp secret show \
+  --name ca-fabricmon-<unique-id> \
+  --resource-group rg-fabricmon-prod \
+  --secret-name db-connection-string \
   --query value -o tsv
 ```
 
@@ -94,14 +93,15 @@ az postgres flexible-server update \
   --admin-password "$NEW_PASSWORD"
 ```
 
-3. Update Key Vault secret:
+3. Update Container App secret:
 
 ```bash
 NEW_CONNECTION_STRING="postgresql://dbadmin:$NEW_PASSWORD@psql-fabricmon-<unique-id>.postgres.database.azure.com:5432/fabricmon?sslmode=require"
 
-az keyvault secret set \
-  --vault-name kv-fabricmon-<unique-id> \
-  --name db-connection-string \
+az containerapp secret set \
+  --name ca-fabricmon-<unique-id> \
+  --resource-group rg-fabricmon-prod \
+  --secret-name db-connection-string \
   --value "$NEW_CONNECTION_STRING"
 ```
 
@@ -200,14 +200,11 @@ Look for `collection_cycle_start`, `capacities_discovered`, and `collection_comp
 ### Rotate Admin API Key
 
 ```bash
-az keyvault secret set \
-  --vault-name kv-fabricmon-<unique-id> \
-  --name admin-api-key \
-  --value $(openssl rand -base64 32)
-
-az containerapp revision restart \
+az containerapp secret set \
   --name ca-fabricmon-<unique-id> \
-  --resource-group rg-fabricmon-prod
+  --resource-group rg-fabricmon-prod \
+  --secret-name admin-api-key \
+  --value $(openssl rand -base64 32)
 ```
 
 ### Rotate Customer Ingest Key

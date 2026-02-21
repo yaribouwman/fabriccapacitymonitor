@@ -8,6 +8,7 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [0.1.1] - 2026-02-21
 
 ### Fixed
+- Key Vault deployment failure: Application secrets (`db-connection-string`, `admin-api-key`) are now injected directly into the Container App instead of being created in the Key Vault via ARM. This avoids permission errors when deploying via the Azure Portal since the deploying user no longer needs Key Vault Data Plane roles.
 - `alertEmails` parameter now accepts a comma-separated string instead of an array, fixing the Azure portal deployment error
 - Storage account, registry, key vault, and container app names now strip hyphens and truncate to meet Azure naming constraints
 - Corrected repository name references in Deploy to Azure button and GitHub Actions workflows

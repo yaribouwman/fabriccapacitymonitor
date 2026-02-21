@@ -55,9 +55,7 @@ sequenceDiagram
     participant KV as Key Vault
     participant DB as PostgreSQL
 
-    App->>MI: Authenticate (IMDS)
-    App->>KV: Get db-connection-string (using MI)
-    KV->>App: Return secret value
+    App->>App: Retrieve db-connection-string from secure store
     App->>DB: Connect using connection string
     DB->>App: Query results
 ```
