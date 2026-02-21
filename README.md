@@ -69,19 +69,23 @@ Deploy with Bicep and CI/CD pipelines.
 
 Once your infrastructure is deployed, onboarding a new customer takes two steps:
 
-### Step 1: Customer Grants Access (10 minutes)
+### Step 1: Customer Grants Access (5-10 minutes)
 
-Send your customer the appropriate setup guide:
+Send your customer the appropriate setup guide based on their language and technical level:
 
-- **English**: [onboarding/en/customer-guide.md](onboarding/en/customer-guide.md)
-- **Dutch**: [onboarding/nl/customer-guide.md](onboarding/nl/customer-guide.md)
+**English**:
+- Small organizations: [Portal Setup](onboarding/en/portal.md)
+- Technical teams: [CLI Script Setup](onboarding/en/script.md)
+- Enterprises: [IaC Setup](onboarding/en/iac.md)
+- Overview: [Customer Guide](onboarding/en/customer-guide.md)
 
-The customer guide provides three setup options:
-- **Option A: Portal Setup** - Quick Azure Portal walkthrough (5 minutes, no tooling)
-- **Option B: CLI Script** - Auditable bash script for repeatable setup
-- **Option C: Bicep IaC** - Infrastructure-as-Code for enterprise change management
+**Dutch (Nederlands)**:
+- Kleine organisaties: [Portal Setup](onboarding/nl/portal.md)
+- Technische teams: [CLI Script Setup](onboarding/nl/script.md)
+- Enterprises: [IaC Setup](onboarding/nl/iac.md)
+- Overzicht: [Klant Handleiding](onboarding/nl/customer-guide.md)
 
-All three options create identical Service Principals with identical permissions.
+All options create identical Service Principals with identical permissions.
 
 **What customers do**: Create a Service Principal with Azure "Reader" role on their Fabric capacity, then send you 4 values (Tenant ID, Client ID, Client Secret, Subscription ID).
 
