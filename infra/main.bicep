@@ -41,8 +41,10 @@ param ownerName string = 'Yari Bouwman'
 @description('Cost center for tagging')
 param costCenter string = 'Engineering'
 
-@description('Email addresses for alert notifications')
-param alertEmails array = []
+@description('Email addresses for alert notifications (comma-separated, e.g. a@example.com,b@example.com)')
+param alertEmails string = ''
+
+var alertEmailsArray = empty(alertEmails) ? [] : split(alertEmails, ',')
 
 var nameSuffix = uniqueString(resourceGroup().id)
 var tags = {
@@ -144,7 +146,7 @@ module monitoring 'modules/monitoring.bicep' = {
   params: {
     keyVaultId: resourceId('Microsoft.KeyVault/vaults', keyVault.outputs.keyVaultName)
     containerAppId: resourceId('Microsoft.App/containerApps', containerApp.outputs.appName)
-    alertEmails: alertEmails
+    alertEmails: alertEmailsArray
     environmentType: environmentType
     tags: tags
   }

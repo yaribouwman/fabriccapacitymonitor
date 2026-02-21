@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.40.2.10011",
-      "templateHash": "8983353691809237936"
+      "templateHash": "13447627002521738017"
     }
   },
   "parameters": {
@@ -85,14 +85,15 @@
       }
     },
     "alertEmails": {
-      "type": "array",
-      "defaultValue": [],
+      "type": "string",
+      "defaultValue": "",
       "metadata": {
-        "description": "Email addresses for alert notifications"
+        "description": "Email addresses for alert notifications (comma-separated, e.g. a@example.com,b@example.com)"
       }
     }
   },
   "variables": {
+    "alertEmailsArray": "[if(empty(parameters('alertEmails')), createArray(), split(parameters('alertEmails'), ','))]",
     "nameSuffix": "[uniqueString(resourceGroup().id)]",
     "tags": {
       "Owner": "[parameters('ownerName')]",
@@ -1466,7 +1467,7 @@
             "value": "[resourceId('Microsoft.App/containerApps', reference(resourceId('Microsoft.Resources/deployments', 'containerapp-deployment'), '2025-04-01').outputs.appName.value)]"
           },
           "alertEmails": {
-            "value": "[parameters('alertEmails')]"
+            "value": "[variables('alertEmailsArray')]"
           },
           "environmentType": {
             "value": "[parameters('environmentType')]"
