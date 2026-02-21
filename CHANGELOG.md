@@ -5,16 +5,11 @@ All notable changes to Fabric Capacity Monitor will be documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).  
 Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
-### Changed
-- Rewrote documentation to remove AI-generated content and improve technical writing quality
-- Updated security.md with specific remediation commands and detailed security enhancement guidance
-- Revised CONTRIBUTING.md with project-specific requirements and concrete contribution priorities
-- Enhanced README.md roadmap with current status indicators
-- Improved error messages in collector service for clarity
+## [0.1.1] - 2026-02-21
 
 ### Fixed
+- `alertEmails` parameter now accepts a comma-separated string instead of an array, fixing the Azure portal deployment error
+- Storage account and registry names now strip hyphens and truncate to meet Azure naming constraints
 - Corrected repository name references in Deploy to Azure button and GitHub Actions workflows
 - GitHub Actions workflows now skip Azure deployment when credentials are not configured
 
