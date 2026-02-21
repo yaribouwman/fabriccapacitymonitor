@@ -4,10 +4,19 @@ This folder contains customer-facing onboarding guides and setup automation tool
 
 ## Customer Guides
 
-**English**: `en/customer-guide.md`  
-**Dutch**: `nl/customer-guide.md`
+Professional guides for customers explaining the setup process, security model, and setup options.
 
-Professional guides for customers explaining the setup process, security model, and three onboarding options (Portal, CLI Script, Bicep IaC).
+### English
+- **[Customer Guide](en/customer-guide.md)** - Overview and introduction
+- **[Portal Setup](en/portal.md)** - Azure Portal walkthrough (no CLI)
+- **[CLI Script Setup](en/script.md)** - Bash script automation
+- **[IaC Setup](en/iac.md)** - Bicep Infrastructure-as-Code
+
+### Dutch (Nederlands)
+- **[Klant Handleiding](nl/customer-guide.md)** - Overzicht en introductie
+- **[Portal Setup](nl/portal.md)** - Azure Portal walkthrough (geen CLI)
+- **[CLI Script Setup](nl/script.md)** - Bash script automatisering
+- **[IaC Setup](nl/iac.md)** - Bicep Infrastructure-as-Code
 
 ## Setup Automation
 

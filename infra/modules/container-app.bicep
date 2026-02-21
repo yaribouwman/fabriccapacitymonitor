@@ -20,6 +20,14 @@ param subnetId string
 @description('Resource ID of the user assigned managed identity')
 param managedIdentityId string
 
+@description('Database connection string')
+@secure()
+param databaseConnectionString string
+
+@description('Admin API key')
+@secure()
+param adminApiKey string
+
 @description('Container image to deploy')
 param containerImage string
 
@@ -91,13 +99,11 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
       secrets: [
         {
           name: 'db-connection-string'
-          keyVaultUrl: 'https://${keyVaultName}.vault.azure.net/secrets/db-connection-string'
-          identity: managedIdentityId
+          value: databaseConnectionString
         }
         {
           name: 'admin-api-key'
-          keyVaultUrl: 'https://${keyVaultName}.vault.azure.net/secrets/admin-api-key'
-          identity: managedIdentityId
+          value: adminApiKey
         }
         {
           name: 'storage-connection-string'

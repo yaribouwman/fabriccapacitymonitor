@@ -34,25 +34,34 @@ Customer onboarding uses a three-tier data collection model:
 
 Send the customer the appropriate setup guide from the `onboarding/` folder:
 
-**English**: `onboarding/en/customer-guide.md`
-**Dutch**: `onboarding/nl/customer-guide.md`
+**English**: 
+- Overview: `onboarding/en/customer-guide.md`
+- Portal Setup: `onboarding/en/portal.md`
+- CLI Script: `onboarding/en/script.md`
+- IaC Setup: `onboarding/en/iac.md`
 
-The customer guide provides three setup options:
+**Dutch**: 
+- Overview: `onboarding/nl/customer-guide.md`
+- Portal Setup: `onboarding/nl/portal.md`
+- CLI Script: `onboarding/nl/script.md`
+- IaC Setup: `onboarding/nl/iac.md`
 
-**Option A: Quick Portal Setup**
+The customer guide provides an overview and three setup options:
+
+**Portal Setup**
 - Best for small organizations
 - 5-minute Azure Portal walkthrough
-- No tooling required
+- No command line tools required
 
-**Option B: CLI Script**
-- Best for medium organizations
+**CLI Script Setup**
+- Best for organizations wanting repeatable setup
 - Auditable bash script (`onboarding/setup-customer.sh`)
 - Reviewable and repeatable
 
-**Option C: Bicep IaC**
-- Best for enterprise organizations
-- Infrastructure-as-Code template (`onboarding/setup-customer.bicep`)
-- Supports change management processes
+**Infrastructure as Code (Bicep)**
+- Best for enterprises with change management
+- Bicep template (`onboarding/setup-customer.bicep`)
+- Full audit trail
 
 All three options create identical Service Principals with identical permissions.
 
