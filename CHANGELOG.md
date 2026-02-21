@@ -8,7 +8,7 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [0.1.1] - 2026-02-21
 
 ### Fixed
-- Fixed "Site is not available" error on initial deployment: The default container image in the Bicep template is now set to the real application image (`ghcr.io/yaribouwman/fabriccapacitymonitor:latest`) instead of the Azure helloworld image. This ensures the application starts correctly on port 8000 right after the initial "Deploy to Azure" click.
+- Fixed `Deployment Progress Deadline Exceeded. 0/1 replicas ready` error: Added generous explicit Health Probes (Startup, Liveness, Readiness) to the Container App configuration to give the PostgreSQL database enough time to finish provisioning before Azure marks the initial deployment as failed.
 - Key Vault `enablePurgeProtection` error during Starter tier deployment: The property is now omitted instead of explicitly being set to `false`, avoiding terminal provisioning failures when a soft-deleted vault exists.
 - Key Vault deployment failure: Application secrets (`db-connection-string`, `admin-api-key`) are now injected directly into the Container App instead of being created in the Key Vault via ARM. This avoids permission errors when deploying via the Azure Portal since the deploying user no longer needs Key Vault Data Plane roles.
 - `alertEmails` parameter now accepts a comma-separated string instead of an array, fixing the Azure portal deployment error
