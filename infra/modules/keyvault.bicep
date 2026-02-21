@@ -44,7 +44,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' = {
     enablePurgeProtection: environmentType == 'Enterprise'
     enabledForDeployment: false
     enabledForDiskEncryption: false
-    enabledForTemplateDeployment: false
+    enabledForTemplateDeployment: true
     publicNetworkAccess: environmentType == 'Enterprise' ? 'Disabled' : 'Enabled'
     networkAcls: environmentType == 'Starter' ? {
       bypass: 'AzureServices'
